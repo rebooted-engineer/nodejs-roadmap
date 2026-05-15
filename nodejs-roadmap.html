@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Node.js Roadmap — rebooted_engineer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Oswald:wght@400;600;700&family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f5f0e8;
+      --bg-dark: #1a1a14;
+      --ink: #111;
+      --ink-muted: #666;
+      --amber: #e8a200;
+      --amber-bright: #f5b800;
+      --green-dark: #1c2d1e;
+      --green-accent: #2e4a1e;
+      --border: #ccc5b0;
+      --mono: 'IBM Plex Mono', monospace;
+      --display: 'DM Serif Display', serif;
+      --headline: 'Oswald', sans-serif;
+      --body: 'Inter', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--body);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* ── NAV ── */
+    nav {
+      background: var(--bg-dark);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      height: 48px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 2px solid var(--amber);
+    }
+    .nav-brand {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--amber);
+      letter-spacing: 0.05em;
+    }
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      list-style: none;
+    }
+    .nav-links a {
+      color: #aaa;
+      text-decoration: none;
+      font-size: 12px;
+      font-family: var(--mono);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--amber); }
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--bg-dark);
+      color: #fff;
+      padding: 80px 64px 64px;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 4px solid var(--amber);
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -40px; right: -40px;
+      width: 360px; height: 360px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(232,162,0,0.12), transparent 70%);
+      pointer-events: none;
+    }
+    .hero-eyebrow {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--amber);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .hero h1 {
+      font-family: var(--display);
+      font-size: clamp(52px, 6vw, 88px);
+      line-height: 1.0;
+      font-weight: 400;
+      margin-bottom: 16px;
+    }
+    .hero h1 em {
+      font-style: italic;
+      color: var(--amber);
+    }
+    .hero-sub {
+      font-size: 15px;
+      color: #aaa;
+      max-width: 560px;
+      margin-bottom: 32px;
+      line-height: 1.7;
+    }
+    .hero-stats {
+      display: flex;
+      gap: 48px;
+      flex-wrap: wrap;
+    }
+    .stat { display: flex; flex-direction: column; gap: 2px; }
+    .stat-n {
+      font-family: var(--mono);
+      font-size: 28px;
+      color: var(--amber);
+      font-weight: 600;
+    }
+    .stat-label {
+      font-size: 11px;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    /* ── TERMINAL BADGE ── */
+    .terminal {
+      background: var(--green-dark);
+      border: 1px solid var(--green-accent);
+      border-radius: 6px;
+      padding: 20px 24px;
+      font-family: var(--mono);
+      font-size: 13px;
+      color: #9ee09e;
+      line-height: 1.9;
+      display: inline-block;
+      max-width: 480px;
+    }
+    .terminal .prompt { color: #5a8a5a; }
+    .terminal .cmd { color: #c9e89e; }
+    .terminal .out { color: #9ee09e; }
+    .terminal .comment { color: #3a5a3a; }
+
+    /* ── SECTION OVERLINES ── */
+    .section-tag {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-tag::after {
+      content: '';
+      height: 1px;
+      background: var(--border);
+      flex: 1;
+      max-width: 80px;
+    }
+
+    /* ── INTRO SECTION ── */
+    .intro-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .intro-left {
+      padding: 64px;
+      border-right: 1px solid var(--border);
+    }
+    .intro-left h2 {
+      font-family: var(--display);
+      font-size: 38px;
+      font-weight: 400;
+      line-height: 1.15;
+      margin-bottom: 20px;
+    }
+    .intro-left h2 em { color: var(--amber); font-style: italic; }
+    .intro-left p {
+      font-size: 14px;
+      color: #444;
+      line-height: 1.75;
+      margin-bottom: 16px;
+    }
+    .intro-right {
+      padding: 64px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .intro-card {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+    .intro-card-num {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--amber);
+      background: rgba(232,162,0,0.12);
+      border: 1px solid rgba(232,162,0,0.3);
+      border-radius: 4px;
+      padding: 4px 8px;
+      white-space: nowrap;
+      margin-top: 2px;
+    }
+    .intro-card h4 {
+      font-family: var(--headline);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      margin-bottom: 4px;
+    }
+    .intro-card p { font-size: 13px; color: #555; line-height: 1.6; }
+
+    /* ── ROADMAP WRAPPER ── */
+    .roadmap-wrapper {
+      padding: 0 0 80px;
+    }
+    .roadmap-title-row {
+      padding: 64px 64px 32px;
+      border-bottom: 1px solid var(--border);
+    }
+    .roadmap-title-row h2 {
+      font-family: var(--display);
+      font-size: 46px;
+      font-weight: 400;
+    }
+    .roadmap-title-row h2 em { color: var(--amber); }
+    .roadmap-sub {
+      font-size: 13px;
+      color: #777;
+      margin-top: 8px;
+      font-style: italic;
+    }
+
+    /* ── PHASE BLOCK ── */
+    .phase {
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+    .phase-header {
+      display: flex;
+      align-items: stretch;
+      border-bottom: 1px solid var(--border);
+    }
+    .phase-num {
+      width: 64px;
+      min-width: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--amber);
+      background: rgba(232,162,0,0.08);
+      border-right: 1px solid var(--border);
+      writing-mode: vertical-lr;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 20px 0;
+    }
+    .phase-meta {
+      padding: 24px 32px;
+      flex: 1;
+      border-right: 1px solid var(--border);
+    }
+    .phase-meta h3 {
+      font-family: var(--headline);
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .phase-duration {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--ink-muted);
+      letter-spacing: 0.08em;
+    }
+    .phase-badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 32px;
+    }
+    .badge {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 6px 16px;
+      border-radius: 2px;
+      border: 1px solid;
+    }
+    .badge.beginner { color: #3a7d44; border-color: #3a7d44; background: rgba(58,125,68,0.08); }
+    .badge.intermediate { color: #b07c00; border-color: #b07c00; background: rgba(176,124,0,0.08); }
+    .badge.advanced { color: #b5381a; border-color: #b5381a; background: rgba(181,56,26,0.08); }
+
+    /* ── PROJECTS GRID ── */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: 64px 1fr;
+    }
+    .projects-sidebar {
+      background: rgba(232,162,0,0.04);
+      border-right: 1px solid var(--border);
+    }
+    .projects-list {
+      padding: 32px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 24px;
+    }
+
+    /* ── PROJECT CARD ── */
+    .project-card {
+      border: 1px solid var(--border);
+      background: #fff;
+      padding: 24px;
+      position: relative;
+      transition: box-shadow 0.2s, transform 0.2s;
+      cursor: default;
+    }
+    .project-card:hover {
+      box-shadow: 4px 4px 0 var(--amber);
+      transform: translate(-2px, -2px);
+    }
+    .project-card-tag {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 10px;
+    }
+    .project-card h4 {
+      font-family: var(--headline);
+      font-size: 16px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      margin-bottom: 8px;
+      line-height: 1.2;
+    }
+    .project-card p {
+      font-size: 12.5px;
+      color: #555;
+      line-height: 1.65;
+      margin-bottom: 16px;
+    }
+    .project-ai-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--mono);
+      font-size: 10px;
+      color: #5a3fde;
+      background: rgba(90,63,222,0.08);
+      border: 1px solid rgba(90,63,222,0.2);
+      border-radius: 2px;
+      padding: 4px 10px;
+      margin-bottom: 16px;
+    }
+    .project-ai-badge::before { content: '⚡'; }
+    .topics-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #888;
+      margin-bottom: 8px;
+    }
+    .topic-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .topic-tag {
+      font-family: var(--mono);
+      font-size: 10px;
+      padding: 3px 8px;
+      background: rgba(0,0,0,0.05);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      color: #444;
+    }
+
+    /* ── DARK BAND ── */
+    .dark-band {
+      background: var(--bg-dark);
+      color: #fff;
+      padding: 64px;
+      border-top: 4px solid var(--amber);
+      border-bottom: 4px solid var(--amber);
+    }
+    .dark-band h2 {
+      font-family: var(--display);
+      font-size: 42px;
+      font-weight: 400;
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+    .dark-band h2 em { color: var(--amber); }
+    .dark-band p { color: #999; font-size: 14px; max-width: 600px; line-height: 1.7; }
+
+    /* ── ROADMAP PROGRESS STRIP ── */
+    .progress-strip {
+      background: var(--bg-dark);
+      padding: 24px 64px;
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .progress-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: #aaa;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .progress-bar-wrap {
+      flex: 1;
+      height: 4px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--amber), var(--amber-bright));
+      border-radius: 2px;
+      width: 0%;
+    }
+    .progress-pct {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--amber);
+      font-weight: 600;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--bg-dark);
+      color: #fff;
+      padding: 64px;
+    }
+    footer h2 {
+      font-family: var(--display);
+      font-size: 52px;
+      font-weight: 400;
+      line-height: 1.0;
+      margin-bottom: 24px;
+    }
+    footer h2 em { color: var(--amber); font-style: italic; }
+    footer p { color: #777; font-size: 13px; max-width: 500px; line-height: 1.7; margin-bottom: 24px; }
+    .footer-cta {
+      display: inline-block;
+      background: var(--amber);
+      color: var(--bg-dark);
+      font-family: var(--headline);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 14px 32px;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .footer-cta:hover { background: var(--amber-bright); }
+    .footer-bottom {
+      margin-top: 64px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      font-family: var(--mono);
+      font-size: 11px;
+      color: #444;
+    }
+
+    /* ── SKILLS MATRIX ── */
+    .skills-matrix {
+      padding: 64px;
+      border-bottom: 1px solid var(--border);
+    }
+    .skills-matrix h2 {
+      font-family: var(--display);
+      font-size: 36px;
+      margin-bottom: 40px;
+    }
+    .skills-matrix h2 em { color: var(--amber); }
+    .skills-columns {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+    .skill-col {
+      background: var(--bg);
+      padding: 24px;
+    }
+    .skill-col-title {
+      font-family: var(--headline);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--amber);
+    }
+    .skill-item {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: #444;
+      padding: 4px 0;
+      border-bottom: 1px dotted #ddd;
+    }
+    .skill-item:last-child { border: none; }
+
+    @media (max-width: 768px) {
+      .intro-section { grid-template-columns: 1fr; }
+      .intro-left { border-right: none; border-bottom: 1px solid var(--border); padding: 40px 24px; }
+      .intro-right { padding: 40px 24px; }
+      .hero { padding: 48px 24px; }
+      .projects-list { padding: 24px; grid-template-columns: 1fr; }
+      .skills-matrix, .roadmap-title-row { padding: 40px 24px; }
+      .dark-band, footer { padding: 40px 24px; }
+      .progress-strip { padding: 16px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <div class="nav-brand">rebooted_engineer</div>
+  <ul class="nav-links">
+    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Projects</a></li>
+  </ul>
+</nav>
+
+<!-- ── HERO ── -->
+<header class="hero">
+  <div class="hero-eyebrow">// node.js roadmap — beginner to advanced</div>
+  <h1>Build real.<br>Ship <em>fast.</em><br>Use AI.</h1>
+  <p class="hero-sub">
+    A project-first Node.js curriculum. Every concept is taught through production-grade projects that solve real problems — powered by AI where it makes sense.
+  </p>
+  <div style="display:flex; gap:40px; flex-wrap:wrap; align-items:flex-start; margin-bottom:40px;">
+    <div class="hero-stats">
+      <div class="stat"><span class="stat-n">16</span><span class="stat-label">Projects</span></div>
+      <div class="stat"><span class="stat-n">6</span><span class="stat-label">Phases</span></div>
+      <div class="stat"><span class="stat-n">80+</span><span class="stat-label">Topics</span></div>
+      <div class="stat"><span class="stat-n">8</span><span class="stat-label">AI Integrations</span></div>
+    </div>
+  </div>
+  <div class="terminal">
+    <div><span class="prompt">$ </span><span class="cmd">git clone rebooted-engineer/nodejs-journey</span></div>
+    <div><span class="out">✓ Cloned. 6 phases, 16 real projects.</span></div>
+    <div><span class="prompt">$ </span><span class="cmd">npm run start:phase-1</span></div>
+    <div><span class="out">⚡ Building in public. Let's go.</span></div>
+    <div class="comment"># 0 to production-grade backend engineer</div>
+  </div>
+</header>
+
+<!-- ── INTRO ── -->
+<section class="intro-section">
+  <div class="intro-left">
+    <div class="section-tag">// about this roadmap</div>
+    <h2>Not a tutorial.<br>A <em>curriculum.</em></h2>
+    <p>Most Node.js tutorials teach you to print "Hello World". This roadmap teaches you to build systems. Every phase hands you a real-world problem and gives you the tools to solve it.</p>
+    <p>AI is built into the workflow from day one — not as a gimmick, but as a real engineering tool you'd actually use on the job.</p>
+  </div>
+  <div class="intro-right">
+    <div class="intro-card">
+      <div class="intro-card-num">01</div>
+      <div>
+        <h4>Project-First Learning</h4>
+        <p>Topics are introduced only when a project needs them. Context makes concepts stick.</p>
+      </div>
+    </div>
+    <div class="intro-card">
+      <div class="intro-card-num">02</div>
+      <div>
+        <h4>AI-Augmented Projects</h4>
+        <p>Build AI chatbots, LLM-powered APIs, and semantic search — using OpenAI, Anthropic, and vector databases.</p>
+      </div>
+    </div>
+    <div class="intro-card">
+      <div class="intro-card-num">03</div>
+      <div>
+        <h4>Production-Grade Habits</h4>
+        <p>Testing, logging, Docker, CI/CD — not an afterthought. Baked into every project.</p>
+      </div>
+    </div>
+    <div class="intro-card">
+      <div class="intro-card-num">04</div>
+      <div>
+        <h4>Portfolio-Ready Output</h4>
+        <p>Every project is a deployable, explainable system you'd be proud to show an interviewer.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── ROADMAP ── -->
+<div class="roadmap-wrapper" id="roadmap">
+  <div class="roadmap-title-row">
+    <div class="section-tag">// the curriculum</div>
+    <h2>The <em>roadmap.</em></h2>
+    <p class="roadmap-sub">6 phases. Build small → build real → ship to production.</p>
+  </div>
+
+  <!-- ══════ PHASE 1 ══════ -->
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-num">Phase 01</div>
+      <div class="phase-meta">
+        <h3>Node.js Foundations</h3>
+        <div class="phase-duration">Weeks 1–3 · 3 Projects</div>
+      </div>
+      <div class="phase-badge"><span class="badge beginner">Beginner</span></div>
+    </div>
+    <div class="projects-grid">
+      <div class="projects-sidebar"></div>
+      <div class="projects-list">
+
+        <div class="project-card">
+          <div class="project-card-tag">Project 01</div>
+          <h4>CLI Task Manager</h4>
+          <p>A terminal-based task manager that reads/writes to a JSON file. Your first real interaction with Node's runtime, modules, and file system.</p>
+          <div class="topics-label">Topics Covered</div>
+          <div class="topic-tags">
+            <span class="topic-tag">Node.js runtime</span>
+            <span class="topic-tag">CommonJS vs ESM</span>
+            <span class="topic-tag">process.argv</span>
+            <span class="topic-tag">fs module</span>
+            <span class="topic-tag">readline</span>
+            <span class="topic-tag">JSON I/O</span>
+            <span class="topic-tag">NPM basics</span>
+            <span class="topic-tag">package.json</span>
+          </div>
+        </div>
+
+        <div class="project-card">
+          <div class="project-card-tag">Project 02</div>
+          <h4>File-to-Markdown Converter</h4>
+          <p>Convert CSVs and plain text files into formatted Markdown. Learn async file handling, Streams, and Node's event loop properly.</p>
+          <div class="topics-label">Topics Covered</div>
+          <div class="topic-tags">
+            <span class="topic-tag">Streams & piping</span>
+            <span class="topic-tag">Event loop</span>
+            <span class="topic-tag">Callbacks</span>
+            <span class="topic-tag">Promises / async-await</span>
+            <span class="topic-tag">Error handling</span>
+            <span class="topic-tag">Buffer</span>
+            <span class="topic-tag">path module</span>
+          </div>
+        </div>
+
+        <div class="project-card">
+          <div class="project-card-tag">Project 03</div>
+          <h4>Simple HTTP Server</h4>
+          <p>Build a raw HTTP server without Express. Serve static files, parse URLs, handle routing — all from scratch to understand what frameworks do for you.</p>
+          <div class="topics-label">Topics Covered</div>
+          <div class="topic-tags">
+            <span class="topic-tag">http module</span>
+            <span class="topic-tag">Request / Response objects</span>
+            <span class="topic-tag">URL parsing</span>
+            <span class="topic-tag">MIME types</span>
+            <span class="topic-tag">Static file serving</span>
+            <span class="topic-tag">Status codes</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════ PHASE 2 ══════ -->
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-num">Phase 02</div>
+      <div class="phase-meta">
+        <h3>Express.js & REST APIs</h3>
+        <div class="phase-duration">Weeks 4–6 · 3 Projects</div>
+      </div>
+      <div class="phase-badge"><span class="badge beginner">Beginner</span></div>
+    </div>
+    <div class="projects-grid">
+      <div class="projects-sidebar"></div>
+      <div class="projects-list">
+
+        <div class="project-card">
+          <div class="project-card-tag">Project 04</div>
+          <h4>Recipe REST API</h4>
+          <p>A full CRUD REST API for managing recipes. Learn Express deeply — routing, middleware chains, input validation, and error handling patterns.</p>
+          <div class="topics-label">Topics Covered</div>
+          <div class="topic-tags">
+            <span class="topic-tag">Express setup</span>
+            <span class="topic-tag">Routing & params</span>
+            <span class="topic-tag">Middleware chains</span>
+            <span class="topic-tag">express.json()</span>
+            <span class="topic-tag">CRUD operations</span>
+            <span class="topic-tag">Zod validation</span>
+            <span class="topic-tag">Error middleware</span>
+            <span class="topic-tag">HTTP status semantics</span>
+          </div>
+        </div>
+
+        <div class="project-card">
+          <div class="project-card-tag">Project 05</div>
+          <h4>URL Shortener Service</h4>
+          <p>A production-style URL shortener with redirect tracking, rate limiting, and basic analytics — stored in a database.</p>
+          <div class="topics-label">Topics Covered</div>
+          <div class="topic-tags">
+            <span class="topic-tag">SQLite / better-sqlite3</span>
+            <span class="topic-tag">express-rate-limit</span>
+            <span class="topic-tag">Redirects (301/302)</span>
+            <span class="topic-tag">Unique IDs (nanoid)</span>
+            <span class="topic-tag">Query params</span>
+            <span class="topic-tag">Environment variables</span>
+            <span class="topic-tag">dotenv</span>
+          </div>
+        </div>
+
+        <div class="project-card">
+          <div class="project-card-tag">Project 06</div>
+          <h4>AI-Powered Smart Search API</h4>
+          <p>Add a /search endpoint that uses OpenAI embeddings to find semantically similar recipes — rather than exact keyword matches.</p>
+          <div class="project-ai-badge">AI Integration — OpenAI Embeddings</div>
+          <div class="topics-label">Topics Covered</div>
+          <div class="topic-tags">
+            <span class="topic-tag">OpenAI SDK</span>
+            <span class="topic-tag">Embeddings</span>
+            <span class="topic-tag">Vector similarity</span>
+            <span class="topic-tag">In-memory vector store</span>
+            <span class="topic-tag">API key management</span>
+            <span class="topic-tag">Axios / node-fetch</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════ PHASE 3 ══════ -->
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-num">Phase 03</div>
+      <div class="phase-meta">
+        <h3>Databases, Auth & Real-World Patterns</h3>
+        <div class="phase-duration">Weeks 7–10 · 3 Projects</div>
+      </div>
+      <div class="phase-badge"><span class="badge intermediate">Intermediate</span></div>
+    </div>
+    <div class="projects-grid">
+      <div class="projects-sidebar"></div>
+      <div class="projects-list">
+
+        <div class="project-card">
+          <div class="project-card-tag">Project 07</div>
+          <h4>Job Board Backend</h4>
+          <p>Full-featured REST API for a job listing platform with Postgres, Prisma ORM, relations, filtering, and search. Think cut-down LinkedIn Jobs.</p>
+          <div class="topics-label">Topics Covered</div>
+          <div class="topic-tags">
+            <span class="topic-tag">PostgreSQL</span>
+            <span class="topic-tag">Prisma ORM</span>
+            <span class="topic-tag">Migrations</span>
+            <span class="topic-tag">Relations (1:N, M:N)</span>
+            <span class="topic-tag">Connection pooling</span>
+            <span class="topic-tag">Filtering & pagination</span>
+            <span class="topic-tag">EXPLAIN ANALYZE</span>
+          </div>
+        </div>
+
+        <div class="project-card">
+          <div class="project-card-tag">Project 08</div>
+          <h4>Authentication System</h4>
+          <p>Implement JWT-based auth + refresh token rotation + Google OAuth. The kind of auth system you'd actually run in production.</p>
+          <div class="topics-label">Topics Covered</div>
+          <div class="topic-tags">
+            <span class="topic-tag">Hashing (bcrypt)</span>
+            <span class="topic-tag">JWT (access + refresh)</span>
+            <span class="topic-tag">Passport.js</span>
+            <span class="topic-tag">Google OAuth2</span>
+            <span class="topic-tag">Session vs. token auth</span>
+            <span class="topic-tag">Middleware auth guards</span>
+            <span class="topic-tag">Role-based access</span>
+            <span class="topic-tag">OWASP basics</span>
+          </div>
+        </div>
+
+        <div class="project-card">
+          <div class="project-card-tag">Project 09</div>
+          <h4>AI Resume Screener</h4>
+          <p>Connect the Job Board to Claude's API. Upload a CV — get a structured match score, strengths, and gaps against a job description. Automate it all.</p>
+          <div class="project-ai-badge">AI Integration — Claude API + Structured Outputs</div>
+          <div class="topics-label">Topics Covered</div>
+          <div class="topic-tags">
+            <span class="topic-tag">Anthropic SDK</span>
+            <span class="topic-tag">Multipart file upload</span>
+            <span class="topic-tag">Multer</span>
+            <span class="topic-tag">PDF parsing</span>
+            <span class="topic-tag">Structured outputs</span>
+            <span class="topic-tag">Async workers</span>
+            <span class="topic-tag">Webhook callbacks</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════ PHASE 4 ══════ -->
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-num">Phase 04</div>
+      <div class="phase-meta">
+        <h3>Real-Time, Caching & Queues</h3>
+        <div class="phase-duration">Weeks 11–14 · 3 Projects</div>
+      </div>
+      <div class="phase-badge"><span class="badge intermediate">Intermediate</span></div>
+    </div>
+    <div class="projects-grid">
+      <div class="projects-sidebar"></div>
+      <div class="projects-list">
+
+        <div class="project-card">
+          <div class="project-card-tag">Project 10</div>
+          <h4>Real-Time Chat App</h4>
+          <p>A multi-room chat application with usernames, history, and presence indicators — driven by WebSockets. The system supports thousands of concurrent users.</p>
+          <div class="topics-label">Topics Covered</div>
+          <div class="topic-tags">
+            <span class="topic-tag">Socket.io</span>
+            <span class="topic-tag">WebSocket protocol</span>
+            <span class="topic-tag">Rooms & namespaces</span>
+            <span class="topic-tag">Redis Pub/Sub</span>
+            <span class="topic-tag">Presence tracking</span>
+            <span class="topic-tag">Event-driven arch</span>
+            <span class="topic-tag">Scaling sockets</span>
+          </div>
+        </div>
+
+        <div class="project-card">
+          <div class="project-card-tag">Project 11</div>
+          <h4>Async Email + PDF Pipeline</h4>
+          <p>Accept a form submission, queue a job with BullMQ, generate a PDF receipt and send a personalised email — without blocking the API response.</p>
+          <div class="topics-label">Topics Covered</div>
+          <div class="topic-tags">
+            <span class="topic-tag">BullMQ + Redis</span>
+            <span class="topic-tag">Workers & queues</span>
+            <span class="topic-tag">Job retry/backoff</span>
+            <span class="topic-tag">Nodemailer</span>
+            <span class="topic-tag">PDF generation</span>
+            <span class="topic-tag">Dead-letter queues</span>
+            <span class="topic-tag">Concurrency control</span>
+          </div>
+        </div>
+
+        <div class="project-card">
+          <div class="project-card-tag">Project 12</div>
+          <h4>AI Chatbot with Conversation Memory</h4>
+          <p>A streaming LLM chatbot that remembers past conversations, with semantic memory via pgvector, and graceful fallbacks when context is too long.</p>
+          <div class="project-ai-badge">AI Integration — LLM Streaming + pgvector RAG</div>
+          <div class="topics-label">Topics Covered</div>
+          <div class="topic-tags">
+            <span class="topic-tag">LLM streaming (SSE)</span>
+            <span class="topic-tag">pgvector</span>
+            <span class="topic-tag">RAG pattern</span>
+            <span class="topic-tag">Redis caching</span>
+            <span class="topic-tag">Token counting</span>
+            <span class="topic-tag">Cache-aside pattern</span>
+            <span class="topic-tag">Rate limiting</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════ PHASE 5 ══════ -->
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-num">Phase 05</div>
+      <div class="phase-meta">
+        <h3>Production, Testing & DevOps</h3>
+        <div class="phase-duration">Weeks 15–18 · 2 Projects</div>
+      </div>
+      <div class="phase-badge"><span class="badge advanced">Advanced</span></div>
+    </div>
+    <div class="projects-grid">
+      <div class="projects-sidebar"></div>
+      <div class="projects-list">
+
+        <div class="project-card">
+          <div class="project-card-tag">Project 13</div>
+          <h4>Fully Tested API with CI/CD</h4>
+          <p>Add a comprehensive test suite (unit + integration + E2E) to the Job Board API, wire up GitHub Actions, deploy to Railway with zero-downtime deploys.</p>
+          <div class="topics-label">Topics Covered</div>
+          <div class="topic-tags">
+            <span class="topic-tag">Jest & Supertest</span>
+            <span class="topic-tag">Test doubles (mock/stub)</span>
+            <span class="topic-tag">Testcontainers</span>
+            <span class="topic-tag">GitHub Actions</span>
+            <span class="topic-tag">Docker & Compose</span>
+            <span class="topic-tag">Zero-downtime deploy</span>
+            <span class="topic-tag">Health checks</span>
+            <span class="topic-tag">OpenAPI / Swagger</span>
+          </div>
+        </div>
+
+        <div class="project-card">
+          <div class="project-card-tag">Project 14</div>
+          <h4>Observability Platform</h4>
+          <p>Instrument the chatbot with structured logging, distributed tracing, and Prometheus metrics. Identify and fix a real performance bottleneck using these tools.</p>
+          <div class="topics-label">Topics Covered</div>
+          <div class="topic-tags">
+            <span class="topic-tag">Pino (structured logs)</span>
+            <span class="topic-tag">OpenTelemetry</span>
+            <span class="topic-tag">Jaeger tracing</span>
+            <span class="topic-tag">Prometheus metrics</span>
+            <span class="topic-tag">Grafana dashboards</span>
+            <span class="topic-tag">p99 latency</span>
+            <span class="topic-tag">Memory profiling</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════ PHASE 6 ══════ -->
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-num">Phase 06</div>
+      <div class="phase-meta">
+        <h3>Capstone — Advanced AI Systems</h3>
+        <div class="phase-duration">Weeks 19–24 · 2 Projects</div>
+      </div>
+      <div class="phase-badge"><span class="badge advanced">Advanced</span></div>
+    </div>
+    <div class="projects-grid">
+      <div class="projects-sidebar"></div>
+      <div class="projects-list">
+
+        <div class="project-card">
+          <div class="project-card-tag">Project 15</div>
+          <h4>AI Agent + Tool-Use System</h4>
+          <p>Build an autonomous AI agent that can search the web, read documents, query your database, and execute code — using Claude's tool use API. Think a lite version of Cursor.</p>
+          <div class="project-ai-badge">AI Integration — Agentic Loops + Tool Use</div>
+          <div class="topics-label">Topics Covered</div>
+          <div class="topic-tags">
+            <span class="topic-tag">Agent loop pattern</span>
+            <span class="topic-tag">Tool/function calling</span>
+            <span class="topic-tag">Anthropic tool use</span>
+            <span class="topic-tag">Sandbox execution</span>
+            <span class="topic-tag">Memory management</span>
+            <span class="topic-tag">Tool result parsing</span>
+            <span class="topic-tag">Guardrails</span>
+            <span class="topic-tag">Rate + cost control</span>
+          </div>
+        </div>
+
+        <div class="project-card">
+          <div class="project-card-tag">Project 16</div>
+          <h4>Micro-SaaS — Knowledge Base Platform</h4>
+          <p>A full knowledge base product: document ingestion, semantic search via pgvector, multi-tenant auth, Stripe billing, usage limits, and a polished API — deployed on GCP Cloud Run.</p>
+          <div class="project-ai-badge">AI Integration — Full RAG + Semantic Search</div>
+          <div class="topics-label">Topics Covered</div>
+          <div class="topic-tags">
+            <span class="topic-tag">Multi-tenancy</span>
+            <span class="topic-tag">Stripe integration</span>
+            <span class="topic-tag">Webhooks (Stripe)</span>
+            <span class="topic-tag">GCP Cloud Run</span>
+            <span class="topic-tag">Chunking strategies</span>
+            <span class="topic-tag">Document ingestion</span>
+            <span class="topic-tag">RBAC</span>
+            <span class="topic-tag">Rate-limit per plan</span>
+            <span class="topic-tag">Load testing</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── DARK BAND ── -->
+<div class="dark-band">
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:64px; align-items:start;">
+    <div>
+      <div class="section-tag" style="color:#666;">// the bigger picture</div>
+      <h2>Not just jobs.<br><em>Leverage.</em></h2>
+      <p>Every engineer who ships AI-augmented products is 10× more valuable than one who doesn't. This roadmap doesn't just get you hired — it gets you ahead of people who started earlier than you but never went here.</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:20px;padding-top:40px;">
+      <div style="display:flex;gap:16px;align-items:center;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:20px;">
+        <span style="font-family:var(--mono);font-size:24px;color:var(--amber);font-weight:600;">8</span>
+        <span style="font-size:13px;color:#999;">AI integrations across the curriculum — not a standalone module, but woven in from phase 2.</span>
+      </div>
+      <div style="display:flex;gap:16px;align-items:center;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:20px;">
+        <span style="font-family:var(--mono);font-size:24px;color:var(--amber);font-weight:600;">16</span>
+        <span style="font-size:13px;color:#999;">Deployable projects that become a portfolio — not exercises that stay on your laptop.</span>
+      </div>
+      <div style="display:flex;gap:16px;align-items:center;">
+        <span style="font-family:var(--mono);font-size:24px;color:var(--amber);font-weight:600;">~6m</span>
+        <span style="font-size:13px;color:#999;">Realistic timeline if you treat this like a second job — 2–3 hours every day.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── SKILLS MATRIX ── -->
+<section class="skills-matrix" id="skills">
+  <div class="section-tag">// tech you'll master</div>
+  <h2>Full-stack <em>skill tree.</em></h2>
+  <div class="skills-columns">
+    <div class="skill-col">
+      <div class="skill-col-title">Node.js Core</div>
+      <div class="skill-item">Event loop & libuv</div>
+      <div class="skill-item">Streams & Buffers</div>
+      <div class="skill-item">Worker Threads</div>
+      <div class="skill-item">Child Processes</div>
+      <div class="skill-item">Cluster mode</div>
+      <div class="skill-item">Node profiling</div>
+    </div>
+    <div class="skill-col">
+      <div class="skill-col-title">Databases</div>
+      <div class="skill-item">PostgreSQL</div>
+      <div class="skill-item">Prisma ORM</div>
+      <div class="skill-item">pgvector</div>
+      <div class="skill-item">Redis</div>
+      <div class="skill-item">SQLite</div>
+      <div class="skill-item">Query optimisation</div>
+    </div>
+    <div class="skill-col">
+      <div class="skill-col-title">APIs & Comms</div>
+      <div class="skill-item">REST (Express)</div>
+      <div class="skill-item">WebSockets</div>
+      <div class="skill-item">Socket.io</div>
+      <div class="skill-item">SSE / Streaming</div>
+      <div class="skill-item">Webhooks</div>
+      <div class="skill-item">OpenAPI / Swagger</div>
+    </div>
+    <div class="skill-col">
+      <div class="skill-col-title">Auth & Security</div>
+      <div class="skill-item">JWT</div>
+      <div class="skill-item">OAuth2 / Passport</div>
+      <div class="skill-item">RBAC / ABAC</div>
+      <div class="skill-item">OWASP Top 10</div>
+      <div class="skill-item">Helmet.js</div>
+      <div class="skill-item">Multi-tenancy</div>
+    </div>
+    <div class="skill-col">
+      <div class="skill-col-title">AI / LLM</div>
+      <div class="skill-item">OpenAI SDK</div>
+      <div class="skill-item">Anthropic SDK</div>
+      <div class="skill-item">Tool use / agents</div>
+      <div class="skill-item">RAG pattern</div>
+      <div class="skill-item">Vector embeddings</div>
+      <div class="skill-item">Prompt engineering</div>
+    </div>
+    <div class="skill-col">
+      <div class="skill-col-title">DevOps & Cloud</div>
+      <div class="skill-item">Docker & Compose</div>
+      <div class="skill-item">GCP Cloud Run</div>
+      <div class="skill-item">GitHub Actions</div>
+      <div class="skill-item">OpenTelemetry</div>
+      <div class="skill-item">Prometheus + Grafana</div>
+      <div class="skill-item">Testcontainers</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="section-tag" style="color:#555;">// start the journey</div>
+  <h2>Start<br>building<br><em>today.</em></h2>
+  <p>Every day you wait is a day you haven't started. Pick up Phase 1, Project 1. Build the task manager. It takes a few hours. Then commit it. Then post about it. That's the whole system.</p>
+  <a class="footer-cta" href="#roadmap">→ Start Phase 01</a>
+  <div class="footer-bottom">
+    rebooted_engineer · Node.js Roadmap 2025 · Built in public, one commit at a time.
+  </div>
+</footer>
+
+<script>
+  // Smooth scroll
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      document.querySelector(a.getAttribute('href'))?.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+
+  // Phase hover micro-interaction
+  document.querySelectorAll('.phase').forEach(ph => {
+    ph.addEventListener('mouseenter', () => ph.style.background = 'rgba(232,162,0,0.02)');
+    ph.addEventListener('mouseleave', () => ph.style.background = '');
+  });
+</script>
+
+</body>
+</html>
